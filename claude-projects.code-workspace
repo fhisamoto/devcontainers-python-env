@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "repos/ccd",
+    },
+    {
+      "path": "repos/noise-detector",
+    },
+    {
+      "path": "repos/nebula_prs",
+    },
+    {
+      "path": "repos/my_ocr",
+    },
+    {
+      "path": ".devcontainer",
+    },
+  ],
+}
