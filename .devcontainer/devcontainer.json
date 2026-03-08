@@ -47,6 +47,7 @@
   ],
   "containerEnv": {
     "NODE_OPTIONS": "--max-old-space-size=4096",
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
     "SSH_AUTH_SOCK": "/ssh-agent",
     "CLAUDE_CONFIG_DIR": "/home/node/.claude",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
