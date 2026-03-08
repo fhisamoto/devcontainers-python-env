@@ -29,11 +29,19 @@ The `node` user's home directory and command history are persisted in named Dock
 
 ## Adding a Python Project
 
-1. Clone your repo into `repos/`:
+`workspace.code-workspace` is gitignored — create your own by copying the template:
+
+```bash
+cp workspace.code-workspace.template workspace.code-workspace
+```
+
+Then clone your repo and add it to the workspace:
+
+1. Clone into `repos/`:
    ```bash
    git clone <repo-url> repos/<name>
    ```
-2. Add it to `workspace.code-workspace`:
+2. Add an entry to `workspace.code-workspace`:
    ```json
    { "name": "<name>", "path": "repos/<name>" }
    ```

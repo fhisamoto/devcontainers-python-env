@@ -1,5 +1,13 @@
 {
-  "folders": [{ "name": "workspace", "path": "." }],
+  "folders": [
+    {
+      "name": "workspace",
+      "path": ".",
+    },
+    {
+      "path": "repos/my_ocr",
+    },
+  ],
   "settings": {
     "files.exclude": {
       "repos": true,
