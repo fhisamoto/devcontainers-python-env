@@ -41,7 +41,7 @@ Then clone your repo and add it to the workspace:
    ```bash
    git clone <repo-url> repos/<name>
    ```
-2. Add an entry to `workspace.code-workspace`:
+2. Add it to the workspace via **File > Add Folder to Workspace...** or manually add an entry to `workspace.code-workspace`:
    ```json
    { "name": "<name>", "path": "repos/<name>" }
    ```
