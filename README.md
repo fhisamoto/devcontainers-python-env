@@ -18,7 +18,7 @@ workspace/
 
 The devcontainer (`devcontainer.json` + `Dockerfile`) provides:
 
-- **Base**: Node.js 20
+- **Base**: Node.js 24
 - **Shell**: zsh with fzf, git plugins
 - **Python**: 3.12 via pyenv
 - **Tools**: Claude Code CLI, Docker-in-Docker, GitHub CLI (`gh`), git-delta, jq, vim, nano
