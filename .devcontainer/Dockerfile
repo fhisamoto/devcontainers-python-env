@@ -121,8 +121,66 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"' >> ~/.zshrc && \
     echo 'eval "$(pyenv init -)"' >> ~/.zshrc
 
+ENV POETRY_HOME=/usr/local/share/poetry
+ENV PATH=$POETRY_HOME/bin:$PATH
+USER root
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/share/poetry python3 - && \
+    chmod -R a+rX /usr/local/share/poetry
+USER node
+RUN poetry config virtualenvs.in-project true
+
+# =============================================================================
+# DEVELOPMENT ENVIRONMENT: Ruby
+# =============================================================================
+
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    libreadline-dev \
+    libssl-dev \
+    zlib1g-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV RBENV_ROOT=/usr/local/share/rbenv
+ENV PATH=$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH
+
+ARG RUBY_VERSION=3.2.2
+RUN git clone https://github.com/rbenv/rbenv.git $RBENV_ROOT && \
+    git clone https://github.com/rbenv/ruby-build.git $RBENV_ROOT/plugins/ruby-build && \
+    rbenv install $RUBY_VERSION && \
+    rbenv global $RUBY_VERSION && \
+    gem install bundler && \
+    chmod -R a+rX $RBENV_ROOT
+
+USER node
+RUN echo 'export RBENV_ROOT="/usr/local/share/rbenv"' >> ~/.zshrc && \
+    echo 'export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"' >> ~/.zshrc && \
+    echo 'eval "$(rbenv init -)"' >> ~/.zshrc
+
+# =============================================================================
+# DEVELOPMENT ENVIRONMENT: Terraform + Terragrunt
+# =============================================================================
+
+USER root
+
+ARG TERRAFORM_VERSION=1.14.1
+ARG TERRAGRUNT_VERSION=0.93.13
+
+RUN ARCH=$(dpkg --print-architecture | sed 's/amd64/amd64/;s/arm64/arm64/') && \
+    curl -fsSL "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip" \
+      -o /tmp/terraform.zip && \
+    unzip /tmp/terraform.zip -d /usr/local/bin && \
+    rm /tmp/terraform.zip && \
+    TGARCH=$(dpkg --print-architecture | sed 's/amd64/amd64/;s/arm64/arm64/') && \
+    curl -fsSL "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${TGARCH}" \
+      -o /usr/local/bin/terragrunt && \
+    chmod +x /usr/local/bin/terragrunt
+
+USER node
+
 # =============================================================================
 # PERMISSIONS & INIT SCRIPTS
+
 # =============================================================================
 
 COPY init-firewall.sh init-docker.sh /usr/local/bin/
