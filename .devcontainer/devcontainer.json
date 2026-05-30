@@ -18,8 +18,20 @@
         "esbenp.prettier-vscode",
         "eamodio.gitlens",
         "github.vscode-pull-request-github",
-        "Shopify.ruby-lsp"
-      ]
+        "Shopify.ruby-lsp",
+        "hashicorp.terraform"
+      ],
+      "settings": {
+        "terraform.languageServer.terraform.path": "/usr/local/bin/terraform",
+        "[terraform]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true
+        },
+        "[terraform-vars]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true
+        }
+      }
     }
   },
   "remoteUser": "node",
