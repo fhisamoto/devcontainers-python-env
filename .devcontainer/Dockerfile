@@ -25,8 +25,16 @@ ENV RBENV_ROOT=/usr/local/share/rbenv
 ENV PATH=$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH
 
 # apt packages — base tools, python build deps, ruby build deps
+# Install official Docker CLI (not the outdated docker.io apt package)
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable" \
+      > /etc/apt/sources.list.d/docker.list
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    docker.io \
+    docker-ce-cli \
     less \
     git \
     procps \
@@ -95,7 +103,7 @@ RUN git clone https://github.com/rbenv/rbenv.git $RBENV_ROOT && \
     rbenv install $RUBY_VERSION && \
     rbenv global $RUBY_VERSION && \
     gem install bundler && \
-    chmod -R a+rX $RBENV_ROOT
+    chown -R node:node $RBENV_ROOT
 
 # terraform + terragrunt
 RUN ARCH=$(dpkg --print-architecture) && \
@@ -108,9 +116,10 @@ RUN ARCH=$(dpkg --print-architecture) && \
     chmod +x /usr/local/bin/terragrunt
 
 # permissions and sudoers
-COPY init-firewall.sh init-docker.sh /usr/local/bin/
-RUN usermod -aG docker node && \
-    chmod +x /usr/local/bin/init-firewall.sh /usr/local/bin/init-docker.sh && \
+COPY init-firewall.sh init-docker.sh dc /usr/local/bin/
+RUN groupadd -f docker && \
+    usermod -aG docker node && \
+    chmod +x /usr/local/bin/init-firewall.sh /usr/local/bin/init-docker.sh /usr/local/bin/dc && \
     echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-firewall && \
     echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-docker.sh" >> /etc/sudoers.d/node-firewall && \
     chmod 0440 /etc/sudoers.d/node-firewall

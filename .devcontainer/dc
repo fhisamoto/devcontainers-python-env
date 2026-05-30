@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# docker compose wrapper for devcontainer.
+# Compose resolves "." to the in-container /workspace path, but the host Docker
+# daemon needs the real host path. Generates a resolved config via
+# "docker compose config", rewrites bind mount sources to host paths, then
+# runs docker compose against that patched config.
+set -euo pipefail
+
+if [[ -n "${LOCAL_WORKSPACE_FOLDER:-}" ]]; then
+    profile_flags=()
+    while IFS= read -r p; do
+        [[ -n "$p" ]] && profile_flags+=(--profile "$p")
+    done < <(docker compose config --profiles 2>/dev/null)
+
+    tmp=$(mktemp /tmp/dc-XXXXXX.yml)
+    trap 'rm -f "$tmp"' EXIT
+
+    docker compose "${profile_flags[@]}" config | \
+        sed "s|source: /workspace|source: ${LOCAL_WORKSPACE_FOLDER}|g" > "$tmp"
+
+    docker compose -f "$tmp" "$@"
+else
+    docker compose "$@"
+fi
