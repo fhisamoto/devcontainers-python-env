@@ -166,4 +166,5 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc && \
     echo 'eval "$(pyenv init -)"' >> ~/.zshrc && \
     echo 'export RBENV_ROOT="/usr/local/share/rbenv"' >> ~/.zshrc && \
     echo 'export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"' >> ~/.zshrc && \
-    echo 'eval "$(rbenv init -)"' >> ~/.zshrc
+    echo 'eval "$(rbenv init -)"' >> ~/.zshrc && \
+    echo "alias dcr='dc run --rm'" >> ~/.zshrc
