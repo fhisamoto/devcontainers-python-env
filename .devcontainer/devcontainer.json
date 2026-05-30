@@ -22,6 +22,7 @@
         "hashicorp.terraform"
       ],
       "settings": {
+        "python.defaultInterpreterPath": "/home/node/.pyenv/versions/3.12.13/bin/python3",
         "terraform.languageServer.terraform.path": "/usr/local/bin/terraform",
         "[terraform]": {
           "editor.defaultFormatter": "hashicorp.terraform",
