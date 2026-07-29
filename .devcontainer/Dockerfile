@@ -134,8 +134,8 @@ USER node
 ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
 ENV PATH=$PATH:/usr/local/share/npm-global/bin
 ENV SHELL=/bin/zsh
-ENV EDITOR=nano
-ENV VISUAL=nano
+ENV EDITOR=vim
+ENV VISUAL=vim
 ENV PYENV_ROOT=/home/node/.pyenv
 ENV PATH=$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH
 ENV POETRY_HOME=/usr/local/share/poetry
