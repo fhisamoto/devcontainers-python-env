@@ -140,6 +140,8 @@ ENV PYENV_ROOT=/home/node/.pyenv
 ENV PATH=$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH
 ENV POETRY_HOME=/usr/local/share/poetry
 ENV PATH=$POETRY_HOME/bin:$PATH
+ENV UV_INSTALL_DIR=/usr/local/share/uv/bin
+ENV PATH=$UV_INSTALL_DIR:$PATH
 
 # zsh + claude code
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v${ZSH_IN_DOCKER_VERSION}/zsh-in-docker.sh)" -- \
@@ -159,6 +161,9 @@ RUN curl https://pyenv.run | bash && \
 
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/share/poetry python3 - && \
     poetry config virtualenvs.in-project true
+
+# uv (for MCP servers distributed via uvx, e.g. mcp-grafana)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # zshrc — runtime init hooks
 RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc && \

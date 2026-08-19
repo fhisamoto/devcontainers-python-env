@@ -9,7 +9,7 @@
       "ZSH_IN_DOCKER_VERSION": "1.2.0"
     }
   },
-  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW", "--env-file", "${localWorkspaceFolder}/.devcontainer/.env"],
   "customizations": {
     "vscode": {
       "extensions": [
