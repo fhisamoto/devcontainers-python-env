@@ -11,7 +11,7 @@ ENV TZ="$TZ"
 ARG CLAUDE_CODE_VERSION=latest
 ARG DOCKER_COMPOSE_VERSION=v2.32.4
 ARG GIT_DELTA_VERSION=0.18.2
-ARG RUBY_VERSION=3.2.2
+ARG RUBY_VERSION=3.3.11
 ARG TERRAFORM_VERSION=1.14.1
 ARG TERRAGRUNT_VERSION=0.93.13
 ARG ZSH_IN_DOCKER_VERSION=1.2.0
@@ -69,6 +69,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     liblzma-dev \
     libpq-dev \
+    cmake \
+    pkg-config \
+    libvips-dev \
     && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
