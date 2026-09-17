@@ -116,10 +116,10 @@ RUN ARCH=$(dpkg --print-architecture) && \
     chmod +x /usr/local/bin/terragrunt
 
 # permissions and sudoers
-COPY init-firewall.sh init-docker.sh dc /usr/local/bin/
+COPY init-firewall.sh init-docker.sh init-shell.sh dc /usr/local/bin/
 RUN groupadd -f docker && \
     usermod -aG docker node && \
-    chmod +x /usr/local/bin/init-firewall.sh /usr/local/bin/init-docker.sh /usr/local/bin/dc && \
+    chmod +x /usr/local/bin/init-firewall.sh /usr/local/bin/init-docker.sh /usr/local/bin/init-shell.sh /usr/local/bin/dc && \
     echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-firewall && \
     echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-docker.sh" >> /etc/sudoers.d/node-firewall && \
     chmod 0440 /etc/sudoers.d/node-firewall
@@ -160,11 +160,7 @@ RUN curl https://pyenv.run | bash && \
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/share/poetry python3 - && \
     poetry config virtualenvs.in-project true
 
-# zshrc — runtime init hooks
-RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc && \
-    echo 'export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"' >> ~/.zshrc && \
-    echo 'eval "$(pyenv init -)"' >> ~/.zshrc && \
-    echo 'export RBENV_ROOT="/usr/local/share/rbenv"' >> ~/.zshrc && \
-    echo 'export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"' >> ~/.zshrc && \
-    echo 'eval "$(rbenv init -)"' >> ~/.zshrc && \
-    echo "alias dcr='dc run --rm'" >> ~/.zshrc
+# Shell init hooks (pyenv/rbenv eval, dcr alias) are written to ~/.zshrc by
+# init-shell.sh via postStartCommand, not here — ~/.zshrc lives on a
+# persistent named volume that survives rebuilds, so build-time appends here
+# would never reach containers created from an existing volume.
